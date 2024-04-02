@@ -24,6 +24,13 @@ deploy:
       createNamespace: true
       valuesFiles:
       - ./postgres/values.yaml
+    - name: hivemq
+      chartPath: ./hivemq
+      version: 1.0.0
+      namespace: hivemq
+      createNamespace: true
+      valuesFiles:
+      - ./hivemq/values.yaml
     - name: confluent
       chartPath: ./confluent-platform
       version: 1.0.0
@@ -31,3 +38,10 @@ deploy:
       createNamespace: true
       valuesFiles:
       - ./confluent-platform/values.yaml
+portForward:
+- resourceType: Service
+  resourceName: hivemq-webui
+  namespace: hivemq
+  port: 8080
+  address: 0.0.0.0
+  localPort: 18080
