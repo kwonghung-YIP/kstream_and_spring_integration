@@ -55,6 +55,19 @@ Create the "connect.bootstrap.servers" list
 {{- printf "%s://%s:%s" $protocol $host $port -}}
 {{- end -}}
 
+{{- define "kafka.ui.bootstrap.servers" -}}
+{{- $start := $.Values.broker.ordinals.start | int -}}
+{{- $end := add $start (int $.Values.broker.replicas) -1 | int -}}
+{{- $port := $.Values.broker.port | toString -}}
+{{- $serverList := list -}}
+{{- range $id := seq $start $end | splitList " " -}}
+{{- $host := printf "broker-%s.broker.%s" $id (include "k8s.subdomain" $) -}}
+{{- $bootstrap := printf "%s:%s" $host $port -}}
+{{- $serverList = append $serverList $bootstrap -}}
+{{- end -}}
+{{- printf "%s" (join "," $serverList)}}
+{{- end -}}
+
 {{- define "k8s.subdomain" -}}
 {{- printf "%s.svc.%s" $.Release.Namespace $.Values.kubernetes.cluster -}}
 {{- end -}}

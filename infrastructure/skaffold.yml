@@ -45,3 +45,9 @@ portForward:
   port: 8080
   address: 0.0.0.0
   localPort: 18080
+- resourceType: Service
+  resourceName: kafka-ui
+  namespace: kafka
+  port: 8080
+  address: 0.0.0.0
+  localPort: 18081
