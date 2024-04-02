@@ -117,3 +117,4 @@ kubectl run --stdin --tty \
     -b broker-10.broker.kafka.svc.cluster.local:9092 -L
 ```
 
+[Kafka UI configuration reference](https://docs.kafka-ui.provectus.io/configuration/misc-configuration-properties)
