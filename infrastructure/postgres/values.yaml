@@ -1,0 +1,9 @@
+postgres:
+  port: 5432
+  image:
+    registry: debezium
+    name: example-postgres
+    tag: 2.5.3.Final
+  db: db1
+  user: admin
+  password: password

@@ -1,0 +1,5 @@
+templates/kafka-statefulset.yml
+#templates/kraft-controller.yaml
+#templates/kraft-broker.yaml
+#templates/schema-registry.yaml
+#emplates/kafka-connect.yaml

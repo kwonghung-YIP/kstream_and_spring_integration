@@ -1,0 +1,12 @@
+apiVersion: v2
+name: postgres-single-node-db
+version: 1.0.0
+description: Single node PostgresSQL DB deployment with Debezium plugin
+type: application
+keywords:
+- postgres
+home: https://github.com/kwonghung-YIP
+maintainers:
+- name: Hung YIP
+  email: kwonghung.yip@gmail.com
+appVersion: "2.5.3.Final"

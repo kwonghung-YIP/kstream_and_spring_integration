@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-connect
+  labels:
+    app: connect
+spec:
+  ports:
+  - port: {{ .Values.connect.port }}
+    name: rest
+  clusterIP: None
+  selector:
+    app: connect
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka-connect
+spec:
+  serviceName: "kafka-connect"
+  replicas: {{ .Values.connect.replicas }}
+  ordinals:
+    start: {{ .Values.connect.ordinals.start }}
+  selector:
+    matchLabels:
+      app: connect
+  template:
+    metadata:
+      labels:
+        app: connect
+    spec:
+      containers:
+      - name: kafka-connect
+        image: localhost:32000/kwonghung/custom-kafka-connect
+        ports:
+        - containerPort: {{ .Values.connect.port }}
+          name: rest
+        env:
+        #https://docs.confluent.io/platform/current/installation/configuration/connect/index.html
+        - name: K8S_PODNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: CONNECT_BOOTSTRAP_SERVERS
+          value: {{ include "connect.bootstrap.servers" . }}
+        - name: CONNECT_GROUP_ID
+          value: kafka-connect
+        - name: CONNECT_CONFIG_STORAGE_TOPIC
+          value: _connect-configs
+        - name: CONNECT_OFFSET_STORAGE_TOPIC
+          value: _connect-offsets
+        - name: CONNECT_STATUS_STORAGE_TOPIC
+          value: _connect-storages
+        - name: CONNECT_KEY_CONVERTER
+          value: org.apache.kafka.connect.storage.StringConverter
+        - name: CONNECT_VALUE_CONVERTER
+          value: io.confluent.connect.avro.AvroConverter
+        - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
+          value: {{ include "schema.registry.url" . }}
+        - name: CONNECT_REST_ADVERTISED_HOST_NAME
+          value: $(K8S_PODNAME).kafka-connect.svc.cluster.local
+        - name: CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN
+          value: "[%d] %p %X{connector.context}%m (%c:%L)%n"
+        - name: CONNECT_PLUGIN_PATH
+          value: /usr/share/java,/usr/share/confluent-hub-components,/data/connect-jars
+

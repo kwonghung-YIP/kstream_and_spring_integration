@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker
+  labels:
+    app: kafka-cluster
+spec:
+  ports:
+  - port: {{ .Values.broker.port }}
+    name: listener
+  clusterIP: None
+  selector:
+    app: kafka-cluster
+    role: broker
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: broker
+spec:
+  serviceName: "broker"
+  replicas: {{ .Values.broker.replicas }}
+  ordinals:
+    start: {{ .Values.broker.ordinals.start }}
+  selector:
+    matchLabels:
+      app: kafka-cluster
+      role: broker
+  template:
+    metadata:
+      labels:
+        app: kafka-cluster
+        role: broker
+    spec:
+      containers:
+      - name: kafka
+        image: confluentinc/cp-kafka:{{ .Values.confluent.version }}
+        ports:
+        - containerPort: {{ .Values.broker.port }}
+          name: listener
+        volumeMounts:
+        - name: kafka-data
+          mountPath: /var/lib/kafka/data
+        env:
+        - name: K8S_PODIP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: K8S_PODNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: KAFKA_PROCESS_ROLES
+          value: broker
+        - name: CLUSTER_ID
+          value: {{ .Values.cluster.id }}
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: {{ printf "INTERNAL://$(K8S_PODNAME).broker.%s.svc.%s:%g" .Release.Namespace .Values.kubernetes.cluster .Values.broker.port }} 
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: INTERNAL:PLAINTEXT, CONTROLLER:PLAINTEXT
+        - name: KAFKA_NODE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['apps.kubernetes.io/pod-index']
+        - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+          value: {{ include "controller.quorum.voters" . }}
+        - name: KAFKA_LISTENERS
+          value: "INTERNAL://$(K8S_PODIP):{{ .Values.broker.port }}"
+        - name: KAFKA_CONTROLLER_LISTENER_NAMES
+          value: CONTROLLER
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: INTERNAL
+  volumeClaimTemplates:
+  - metadata:
+      name: kafka-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: {{ .Values.broker.storage }}

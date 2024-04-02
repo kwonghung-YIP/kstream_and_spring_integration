@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: schema-reg
+  namespace: kafka
+spec:
+  type: ClusterIP
+  selector:
+    app: schema-registry
+  ports:
+  - port: {{ .Values.schema.port }}
+    name: rest
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: schema-registry
+  namespace: kafka
+spec:
+  selector:
+    matchLabels:
+      app: schema-registry
+  template:
+    metadata:
+      labels:
+        app: schema-registry
+    spec:
+      containers:
+      - name: schema-registry
+        image: confluentinc/cp-schema-registry:{{ .Values.confluent.version }}
+        ports:
+        - containerPort: {{ .Values.schema.port }}
+          name: rest
+        env:
+        #https://docs.confluent.io/platform/current/schema-registry/installation/config.html
+        #https://stackoverflow.com/questions/3790454/how-do-i-break-a-string-in-yaml-over-multiple-lines
+        - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
+          value: {{ include "schema.registry.kafkastore.bootstrap.servers" .}}
+        - name: SCHEMA_REGISTRY_HOST_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: SCHEMA_REGISTRY_DEBUG
+          value: "true"

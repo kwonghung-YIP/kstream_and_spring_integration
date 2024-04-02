@@ -1,0 +1,33 @@
+kubernetes:
+  cluster: cluster.local
+
+confluent:
+  version: "7.5.3"
+
+cluster:
+  id: JFb61d2pD6fe224FbsjoZl
+
+controller:
+  replicas: 1
+  ordinals:
+    start: 1
+  port: 9093
+  storage: 1Gi
+
+broker:
+  replicas: 3
+  ordinals:
+    start: 10
+  protocol: PLAINTEXT
+  port: 9092
+  storage: 1Gi
+
+schema:
+  protocol: http
+  port: 8081
+
+connect:
+  replicas: 3
+  ordinals:
+    start: 1
+  port: 8083

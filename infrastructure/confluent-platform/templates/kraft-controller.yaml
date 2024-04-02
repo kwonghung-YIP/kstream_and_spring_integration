@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: controller
+spec:
+  ports:
+  - port: {{ .Values.controller.port }}
+    name: controller
+  clusterIP: None
+  selector:
+    app: kafka-cluster
+    role: controller
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: controller
+spec:
+  serviceName: "controller"
+  replicas: {{ .Values.controller.replicas }}
+  ordinals:
+    start: 1
+  selector:
+    matchLabels:
+      app: kafka-cluster
+      role: controller
+  template:
+    metadata:
+      labels:
+        app: kafka-cluster
+        role: controller
+    spec:
+      containers:
+      - name: kafka
+        image: confluentinc/cp-kafka:{{ .Values.confluent.version }}
+        ports:
+        - containerPort: {{ .Values.controller.port }}
+          name: controller
+        volumeMounts:
+        - name: kafka-data
+          mountPath: /var/lib/kafka/data
+        env:
+        - name: K8S_PODIP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: KAFKA_PROCESS_ROLES
+          value: controller
+        - name: KAFKA_NODE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['apps.kubernetes.io/pod-index']
+        - name: CLUSTER_ID
+          value: {{ .Values.cluster.id }}
+        - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+          value: {{ include "controller.quorum.voters" . }}
+        - name: KAFKA_LISTENERS
+          value: "CONTROLLER://$(K8S_PODIP):{{ .Values.controller.port }}"
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: CONTROLLER:PLAINTEXT
+        - name: KAFKA_CONTROLLER_LISTENER_NAMES
+          value: CONTROLLER
+  volumeClaimTemplates:
+  - metadata:
+      name: kafka-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: {{ .Values.controller.storage }}
+

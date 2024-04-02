@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+spec:
+  ports:
+  - port: 9092
+    name: listener
+  clusterIP: None
+  selector:
+    app: kafka-broker
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka-broker
+spec:
+  serviceName: "kafka"
+  replicas: 1
+  ordinals:
+    start: 1
+  selector:
+    matchLabels:
+      app: kafka-broker
+  template:
+    metadata:
+      labels:
+        app: kafka-broker
+    spec:
+      containers:
+      - name: kafka
+        image: confluentinc/cp-kafka:7.5.3
+        ports:
+        - containerPort: 9092
+          name: listener
+        env:
+        - name: KAFKA_PROCESS_ROLES
+          value: broker,controller
+        - name: CLUSTER_ID
+          value: JFb61d2pD6fe224FbsjoZl
+        - name: KAFKA_LISTENERS
+          value: INTERNAL://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: INTERNAL://kafka-0:9092
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: INTERNAL
+        - name: KAFKA_NODE_ID
+          value: "1"
+        - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+          value: 1@kafka:29093
+        - name: KAFKA_CONTROLLER_LISTENER_NAMES
+          value: CONTROLLER
+
