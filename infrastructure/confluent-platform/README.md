@@ -1,6 +1,6 @@
 ## Call Kafka Connect REST API
 
-### Create the Debezium Postgres source connector 
+### Create Debezium Postgres source connector 
 ```bash
 kubectl exec --stdin --tty \
     kafka-connect-1 --namespace=kafka -- \
@@ -16,11 +16,28 @@ kubectl exec --stdin --tty \
                 "database.user": "admin",
                 "database.password": "password",
                 "database.dbname" : "db1",
-                "topic.prefix": "postgres_",
-                "schema.include.list": "stock"
+                "topic.prefix": "postgres",
+                "schema.include.list": "stock",
+                "topic.delimiter": "_",
+                "topic.creation.enable": "true",
+                "topic.creation.groups": "postgres",
+                "topic.creation.default.replication.factor": "-1",
+                "topic.creation.default.partitions": "-1",
+                "topic.creation.postgres.replication.factor": "2",
+                "topic.creation.postgres.partitions": "10",
+                "topic.creation.postgres.include": "postgres.*"
             }
         }'
 ```
+
+### Delete Debezium Postgres source connector 
+```bash
+kubectl exec --stdin --tty \
+    kafka-connect-1 --namespace=kafka -- \
+    curl -X DELETE \
+    localhost:8083/connectors/debezium-src-connector
+```
+
 
 ### Check connector status 
 ```bash
@@ -48,7 +65,7 @@ kubectl exec --stdin --tty \
 kubectl exec --stdin --tty \
     kafka-connect-2 --namespace=kafka -- \
     curl -X POST \
-    localhost:8083/connectors/debezium-src-connector/restart
+    localhost:8083/connectors/debezium-src-connector/restart #pause,resume,stop
 ```
 
 ## Apache Kafka utilities 
@@ -75,7 +92,7 @@ kubectl run --stdin --tty \
     apache-kafka --image=apache/kafka:3.7.0 \
     --restart=Never --rm --namespace=kafka --command -- \
     /opt/kafka/bin/kafka-topics.sh --bootstrap-server broker-10.broker:9092 \
-    --describe --topic testing
+    --describe --topic postgres_stock_quote
 ```
 
 Publish message to topic
@@ -117,4 +134,7 @@ kubectl run --stdin --tty \
     -b broker-10.broker.kafka.svc.cluster.local:9092 -L
 ```
 
+## References
+[Kafa Connect REST API References](https://docs.confluent.io/platform/current/connect/references/restapi.html)
+[Debezium Postgres source connector: Configuration Reference](https://docs.confluent.io/kafka-connectors/debezium-postgres-source/current/postgres_source_connector_config.html#postgres-source-connector-config)
 [Kafka UI configuration reference](https://docs.kafka-ui.provectus.io/configuration/misc-configuration-properties)

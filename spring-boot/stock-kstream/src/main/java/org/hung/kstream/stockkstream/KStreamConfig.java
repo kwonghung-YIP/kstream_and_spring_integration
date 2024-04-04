@@ -19,6 +19,6 @@ public class KStreamConfig {
     
     @Bean
     public KStream dummy(StreamsBuilder builder) {
-        return builder.stream("postgres_.stock.quote",Consumed.with(Serdes.String(),Serdes.ByteArray()));
+        return builder.stream("postgres_stock_quote",Consumed.with(Serdes.String(),Serdes.ByteArray()));
     }
 }

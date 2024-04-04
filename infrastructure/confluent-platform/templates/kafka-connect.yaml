@@ -42,7 +42,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: CONNECT_BOOTSTRAP_SERVERS
-          value: {{ include "connect.bootstrap.servers" . }}
+          value: {{ include "connect.bootstrap.servers" $ }}
         - name: CONNECT_GROUP_ID
           value: kafka-connect
         - name: CONNECT_CONFIG_STORAGE_TOPIC
@@ -56,9 +56,9 @@ spec:
         - name: CONNECT_VALUE_CONVERTER
           value: io.confluent.connect.avro.AvroConverter
         - name: CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL
-          value: {{ include "schema.registry.url" . }}
+          value: {{ include "schema.registry.url" $ }}
         - name: CONNECT_REST_ADVERTISED_HOST_NAME
-          value: $(K8S_PODNAME).kafka-connect.svc.cluster.local
+          value: {{ include "connect.rest.advertised.hostname" $ }}
         - name: CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN
           value: "[%d] %p %X{connector.context}%m (%c:%L)%n"
         - name: CONNECT_PLUGIN_PATH

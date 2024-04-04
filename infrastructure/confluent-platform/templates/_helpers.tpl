@@ -68,6 +68,10 @@ Create the "connect.bootstrap.servers" list
 {{- printf "%s" (join "," $serverList)}}
 {{- end -}}
 
+{{- define "connect.rest.advertised.hostname" -}}
+{{- printf "$(K8S_PODNAME).kafka-connect.%s" (include "k8s.subdomain" $) -}}
+{{- end -}}
+
 {{- define "k8s.subdomain" -}}
 {{- printf "%s.svc.%s" $.Release.Namespace $.Values.kubernetes.cluster -}}
 {{- end -}}
