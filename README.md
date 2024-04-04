@@ -24,3 +24,8 @@ VS Code extension
 - Spring Boot Extension Pack (VMware)
 - Spring Boot Tools (VMare)
 
+References
+- [Apache Kafka](https://kafka.apache.org/37/documentation/streams/core-concepts)
+- [Spring boot maven plugin:goals](https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#goals)
+
+

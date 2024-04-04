@@ -1,0 +1,8 @@
+spring:
+    application:
+        name: stock-kstream
+    kafka:
+        streams:
+            application-id: stock-kstream
+            bootstrap-servers: broker-10.broker.kafka.svc.cluster.local:9092,broker-11.broker.kafka.svc.cluster.local:9092,broker-12.broker.kafka.svc.cluster.local:9092
+            #properties:

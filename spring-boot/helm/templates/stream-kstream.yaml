@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-kstream
+spec:
+  selector:
+    matchLabels:
+      app: stock-kstream
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: stock-kstream
+    spec:
+      containers:
+      - name: spring-boot
+        image: {{ .Values.stock_kstream.image.repository }}:{{ .Values.stock_kstream.image.tag }}
+        imagePullPolicy: {{ .Values.stock_kstream.image.pullPolicy }}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: microk8s
