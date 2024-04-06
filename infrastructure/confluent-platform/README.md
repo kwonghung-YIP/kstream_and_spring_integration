@@ -25,7 +25,10 @@ kubectl exec --stdin --tty \
                 "topic.creation.default.partitions": "-1",
                 "topic.creation.postgres.replication.factor": "2",
                 "topic.creation.postgres.partitions": "10",
-                "topic.creation.postgres.include": "postgres.*"
+                "topic.creation.postgres.include": "postgres.*",
+                "transforms":"extract",
+                "transforms.extract.type":"io.debezium.transforms.ExtractNewRecordState",
+                "transforms.extract.drop.tombstones":"false"
             }
         }'
 ```
@@ -42,7 +45,7 @@ kubectl exec --stdin --tty \
 ### Check connector status 
 ```bash
 kubectl exec --stdin --tty \
-    kafka-connect-2 --namespace=kafka -- \
+    kafka-connect-1 --namespace=kafka -- \
     curl -X GET \
     -H "Accept:application/json" \
     localhost:8083/connectors\?expand=status\&expand=info | jq .
@@ -137,4 +140,5 @@ kubectl run --stdin --tty \
 ## References
 [Kafa Connect REST API References](https://docs.confluent.io/platform/current/connect/references/restapi.html)
 [Debezium Postgres source connector: Configuration Reference](https://docs.confluent.io/kafka-connectors/debezium-postgres-source/current/postgres_source_connector_config.html#postgres-source-connector-config)
+[Debezium Transformations: New Record State Extraction](https://debezium.io/documentation/reference/stable/transformations/event-flattening.html)
 [Kafka UI configuration reference](https://docs.kafka-ui.provectus.io/configuration/misc-configuration-properties)

@@ -8,7 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
+import org.springframework.kafka.support.serializer.JsonSerde;
 
+import io.confluent.kafka.serializers.KafkaAvroDeserializer;
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -19,6 +22,6 @@ public class KStreamConfig {
     
     @Bean
     public KStream dummy(StreamsBuilder builder) {
-        return builder.stream("postgres_stock_quote",Consumed.with(Serdes.String(),Serdes.ByteArray()));
+        return builder.stream("postgres_stock_quote");// ,Consumed.with(Serdes.String(),Serdes.serdeFrom(new KafkaAvroSerializer(), new KafkaAvroDeserializer()));
     }
 }
