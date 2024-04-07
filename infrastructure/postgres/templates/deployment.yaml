@@ -34,5 +34,5 @@ spec:
         configMap:
           name: postgres-config
           items:
-          - key: "init-db.sql"
-            path: "init-db.sql"
+          - key: "stock-init.sql"
+            path: "stock-init.sql"

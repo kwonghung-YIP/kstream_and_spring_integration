@@ -40,13 +40,8 @@
             <artifactId>spring-boot-starter-json</artifactId>
         </dependency>
 		<dependency>
-			<groupId>org.apache.avro</groupId>
-			<artifactId>avro</artifactId>
-			<version>1.11.3</version>
-		</dependency>
-		<dependency>
 			<groupId>io.confluent</groupId>
-			<artifactId>kafka-avro-serializer</artifactId>
+			<artifactId>kafka-streams-avro-serde</artifactId>
 			<version>7.6.0</version>
 		</dependency>
 
@@ -91,6 +86,23 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<plugin>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro-maven-plugin</artifactId>
+			<version>1.11.3</version>
+			<executions>
+				<execution>
+					<phase>generated-sources</phase>
+					<goals>
+						<goal>schemas</goal>
+					</goals>
+					<configuration>
+						<sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
+						<outputDirectory>${project.basedir}/target/generated-sources/avro/</outputDirectory>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
 	</build>
 
 </project>

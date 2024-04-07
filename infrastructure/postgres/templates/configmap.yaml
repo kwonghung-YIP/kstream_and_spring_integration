@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: postgres-config
 data:
-  init-db.sql: |-
-{{ .Files.Get "init-db.sql" | indent 4 }}
+  stock-init.sql: |-
+{{ .Files.Get "stock-init.sql" | indent 4 }}

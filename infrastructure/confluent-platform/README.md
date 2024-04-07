@@ -142,3 +142,5 @@ kubectl run --stdin --tty \
 [Debezium Postgres source connector: Configuration Reference](https://docs.confluent.io/kafka-connectors/debezium-postgres-source/current/postgres_source_connector_config.html#postgres-source-connector-config)
 [Debezium Transformations: New Record State Extraction](https://debezium.io/documentation/reference/stable/transformations/event-flattening.html)
 [Kafka UI configuration reference](https://docs.kafka-ui.provectus.io/configuration/misc-configuration-properties)
+[Apache Kafka Stream Developer Guide - Stream DSL](https://kafka.apache.org/37/documentation/streams/developer-guide/dsl-api.html#aggregating)
+[avro-maven-plugin](https://avro.apache.org/docs/1.10.2/gettingstartedjava.html)
