@@ -1,0 +1,65 @@
+{
+	"type": "record",
+	"name": "AvroPriceFeed",
+	"namespace": "org.hung.kstream.stockkstream.domain",
+	"fields": [
+		{
+			"name": "id",
+			"type": {
+				"type": "string",
+				"logicalType": "uuid"
+			},
+			"default": "00000000-0000-0000-0000-000000000000"
+		},
+		{
+			"name": "market",
+			"type": {
+				"type": "string",
+				"connect.default": "NASDAQ"
+			},
+			"default": "NASDAQ"
+		},
+		{
+			"name": "ticker",
+			"type": "string"
+		},
+		{
+			"name": "trade_date",
+			"type": {
+				"type": "int",
+				"logicalType": "date"
+			},
+			"default": 0
+		},
+		{
+			"name": "price",
+			"type": {
+				"type": "bytes",
+				"java-class": "java.math.BigDecimal"
+			}
+		},
+		{
+			"name": "ver",
+			"type": {
+				"type": "int",
+				"connect.default": 1
+			},
+			"default": 1
+		},
+		{
+			"name": "created",
+			"type": {
+				"type": "long",
+				"logicalType": "timestamp-millis"
+			}
+		},
+		{
+			"name": "lastupd",
+			"type": {
+				"type": "long",
+				"logicalType": "timestamp-millis"
+			}
+		}
+	],
+	"connect.name": "postgres_stock_price_feed.Value"
+}

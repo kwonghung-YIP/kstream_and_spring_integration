@@ -144,3 +144,4 @@ kubectl run --stdin --tty \
 [Kafka UI configuration reference](https://docs.kafka-ui.provectus.io/configuration/misc-configuration-properties)
 [Apache Kafka Stream Developer Guide - Stream DSL](https://kafka.apache.org/37/documentation/streams/developer-guide/dsl-api.html#aggregating)
 [avro-maven-plugin](https://avro.apache.org/docs/1.10.2/gettingstartedjava.html)
+[Schema Registry API Reference](https://docs.confluent.io/legacy/platform/4.1.3/schema-registry/docs/using.html)
