@@ -113,7 +113,7 @@ kubectl run --stdin --tty \
     apache-kafka-consumer --image=apache/kafka:3.7.0 \
     --restart=Never --rm --namespace=kafka --command -- \
     /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server broker-10.broker:9092 \
-    --topic postgres_.stock.quote --from-beginning
+    --topic quote_feed --from-beginning
 ```
 
 
