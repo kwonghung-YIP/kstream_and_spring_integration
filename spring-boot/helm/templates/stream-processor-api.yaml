@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-processor-api
+spec:
+  selector:
+    matchLabels:
+      app: stock-processor-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: stock-processor-api
+    spec:
+      containers:
+      - name: spring-boot
+        image: {{ .Values.stock_processor_api.image.repository }}:{{ .Values.stock_processor_api.image.tag }}
+        imagePullPolicy: {{ .Values.stock_processor_api.image.pullPolicy }}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: microk8s

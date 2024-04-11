@@ -16,6 +16,12 @@ build:
       # $IMAGE is set by skaffold included the temporary tag
       # https://skaffold.dev/docs/builders/builder-types/custom/
       buildCommand: mvn spring-boot:build-image -Dspring-boot.build-image.imageName=$IMAGE -DskipTests
+  - image: localhost:32000/kwonghung/stock-processor-api
+    context: ./stock-processor-api
+    custom:
+      # $IMAGE is set by skaffold included the temporary tag
+      # https://skaffold.dev/docs/builders/builder-types/custom/
+      buildCommand: mvn spring-boot:build-image -Dspring-boot.build-image.imageName=$IMAGE -DskipTests
 deploy:
   helm:
     releases:
@@ -25,3 +31,4 @@ deploy:
         namespace: default
         setValueTemplates:
           stock_kstream.image.tag: "{{.IMAGE_TAG_localhost_32000_kwonghung_stock_kstream }}@{{.IMAGE_DIGEST_localhost_32000_kwonghung_stock_kstream }}"
+          stock_processor_api.image.tag: "{{.IMAGE_TAG_localhost_32000_kwonghung_stock_processor_api }}@{{.IMAGE_DIGEST_localhost_32000_kwonghung_stock_processor_api }}"

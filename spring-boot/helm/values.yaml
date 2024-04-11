@@ -3,3 +3,10 @@ stock_kstream:
     repository: localhost:32000/kwonghung/stock-kstream
     tag: 1.0.0
     pullPolicy: Always
+
+
+stock_processor_api:
+  image:
+    repository: localhost:32000/kwonghung/stock-processor-api
+    tag: 1.0.0
+    pullPolicy: Always

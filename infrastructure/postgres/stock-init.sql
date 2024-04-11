@@ -1,7 +1,7 @@
 CREATE SCHEMA stock;
 
 CREATE TABLE stock.company_profile (
-    market varchar(20) not null,
+    market varchar(20) not null default 'NASDAQ',
     ticker varchar(20) not null,
     company_name varchar(100) not null,
     ver int not null default 1,
@@ -36,6 +36,12 @@ CREATE TABLE stock.volume_feed (
 
 do $$
 begin
+    INSERT INTO stock.company_profile (
+        ticker, company_name
+    ) values
+        ('MSFT','Microsoft Corporation'),
+        ('AAPL','Apple Inc.');
+
     INSERT INTO stock.price_feed (
         ticker, price
     ) values
