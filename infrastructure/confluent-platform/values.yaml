@@ -15,7 +15,7 @@ controller:
   storage: 1Gi
 
 broker:
-  replicas: 3
+  replicas: 1
   ordinals:
     start: 10
   protocol: PLAINTEXT
@@ -27,7 +27,7 @@ schema:
   port: 8081
 
 connect:
-  replicas: 3
+  replicas: 1
   ordinals:
     start: 1
   port: 8083

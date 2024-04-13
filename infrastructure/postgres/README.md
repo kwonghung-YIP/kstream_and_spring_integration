@@ -12,10 +12,12 @@ kubectl exec --stdin --tty \
 update stock.price_feed
 set price = random_normal(price,price*0.05),
     ver = ver + 1,
-    lastupd = current_timestamp;
+    lastupd = current_timestamp
+where ticker = 'AAPL';
 
 update stock.volume_feed
 set volume = volume + (1 + random()/10000),
     ver = ver + 1,
-    lastupd = current_timestamp;
+    lastupd = current_timestamp
+where ticker = 'AAPL';
 ```

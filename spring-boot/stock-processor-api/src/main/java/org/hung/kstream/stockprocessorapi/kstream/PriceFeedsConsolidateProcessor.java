@@ -2,10 +2,10 @@ package org.hung.kstream.stockprocessorapi.kstream;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.apache.avro.generic.GenericRecord;
@@ -40,7 +40,9 @@ public class PriceFeedsConsolidateProcessor implements Processor<String,GenericR
         LocalDate tradeDate = LocalDate.ofEpochDay((Integer)feedRec.get("trade_date"));
         
         ByteBuffer bytes = (ByteBuffer)feedRec.get("price");
-        BigDecimal price = new BigDecimal(new BigInteger(bytes.array()));
+        BigDecimal price = new BigDecimal(new BigInteger(bytes.array()),2);
+
+        log.info("feed received ticker:{}, price:{}", ticker, price);
 
         QuoteKey key = new QuoteKey();
         key.setMarket(market);
@@ -53,6 +55,7 @@ public class PriceFeedsConsolidateProcessor implements Processor<String,GenericR
             quote.setMarket(market);
             quote.setTicker(ticker);
             quote.setTradeDate(tradeDate);
+            store.put(key, quote);
         }
 
         if (Objects.isNull(quote.getOpen())) {
@@ -65,12 +68,11 @@ public class PriceFeedsConsolidateProcessor implements Processor<String,GenericR
             quote.setLow(quote.getLow().min(price));
             quote.setHigh(quote.getHigh().max(price));
             quote.setSpot(price);
-            quote.setChange(price.subtract(quote.getOpen()).divide(quote.getOpen()).multiply(BigDecimal.valueOf(100)));
+            quote.setChange(price.subtract(quote.getOpen()).divide(quote.getOpen(),2,RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)));
         }
         quote.setVer(quote.getVer()+1);
-        quote.setLastUpdDate(LocalDateTime.now());
+        quote.setLastUpdDate(Instant.now());
 
-        store.put(key, quote);
         context.forward(new Record<>(key,quote,Instant.now().toEpochMilli()));
     }
 

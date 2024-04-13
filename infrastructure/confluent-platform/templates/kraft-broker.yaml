@@ -70,6 +70,12 @@ spec:
           value: CONTROLLER
         - name: KAFKA_INTER_BROKER_LISTENER_NAME
           value: INTERNAL
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "{{ .Values.broker.replicas }}"
+        - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+          value: "{{ .Values.broker.replicas }}"
+        - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+          value: "{{ .Values.broker.replicas }}"
   volumeClaimTemplates:
   - metadata:
       name: kafka-data

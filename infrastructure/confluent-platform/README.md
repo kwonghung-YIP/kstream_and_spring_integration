@@ -21,9 +21,9 @@ kubectl exec --stdin --tty \
                 "topic.delimiter": "_",
                 "topic.creation.enable": "true",
                 "topic.creation.groups": "postgres",
-                "topic.creation.default.replication.factor": "-1",
-                "topic.creation.default.partitions": "-1",
-                "topic.creation.postgres.replication.factor": "2",
+                "topic.creation.default.replication.factor": "1",
+                "topic.creation.default.partitions": "10",
+                "topic.creation.postgres.replication.factor": "1",
                 "topic.creation.postgres.partitions": "10",
                 "topic.creation.postgres.include": "postgres.*",
                 "transforms":"extract",
@@ -113,7 +113,13 @@ kubectl run --stdin --tty \
     apache-kafka-consumer --image=apache/kafka:3.7.0 \
     --restart=Never --rm --namespace=kafka --command -- \
     /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server broker-10.broker:9092 \
-    --topic quote_feed --from-beginning
+    --topic quote --from-beginning
+
+kubectl run --stdin --tty \
+    apache-kafka-consumer --image=apache/kafka:3.7.0 \
+    --restart=Never --rm --namespace=kafka --command -- \
+    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server broker-10.broker:9092 \
+    --topic postgres_stock_price_feed --from-beginning
 ```
 
 

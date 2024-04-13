@@ -3,7 +3,6 @@ package org.hung.kstream.stockprocessorapi.config;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.state.Stores;
-import org.checkerframework.checker.units.qual.Volume;
 import org.hung.kstream.stockprocessorapi.domain.Quote;
 import org.hung.kstream.stockprocessorapi.domain.QuoteKey;
 import org.hung.kstream.stockprocessorapi.kstream.PriceFeedsConsolidateProcessor;

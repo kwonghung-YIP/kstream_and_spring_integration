@@ -2,10 +2,10 @@ package org.hung.kstream.stockprocessorapi.domain;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 import lombok.Data;
 
@@ -28,6 +28,6 @@ public class Quote {
 
     private long ver;
 
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime lastUpdDate;
+    @JsonFormat(shape=Shape.STRING)//pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone=JsonFormat.DEFAULT_TIMEZONE)
+    private Instant lastUpdDate;
 }

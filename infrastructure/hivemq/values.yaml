@@ -4,7 +4,7 @@ kubernetes:
 hivemq:
   ordinals:
     start: 1
-  replicas: 3
+  replicas: 1
   image:
     registry: docker.io
     name: hivemq/hivemq4

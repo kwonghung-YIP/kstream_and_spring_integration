@@ -1,11 +1,9 @@
 package org.hung.kstream.stockprocessorapi.kstream;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.apache.avro.generic.GenericRecord;
@@ -53,13 +51,13 @@ public class VolumeFeedsConsolidateProcessor implements Processor<String,Generic
             quote.setMarket(market);
             quote.setTicker(ticker);
             quote.setTradeDate(tradeDate);
+            store.put(key, quote);
         }
 
         quote.setVolume(volume);
         quote.setVer(quote.getVer()+1);
-        quote.setLastUpdDate(LocalDateTime.now());
+        quote.setLastUpdDate(Instant.now());
 
-        store.put(key, quote);
         context.forward(new Record<>(key,quote,Instant.now().toEpochMilli()));
     }
 

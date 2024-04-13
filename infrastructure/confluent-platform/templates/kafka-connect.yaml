@@ -63,4 +63,10 @@ spec:
           value: "[%d] %p %X{connector.context}%m (%c:%L)%n"
         - name: CONNECT_PLUGIN_PATH
           value: /usr/share/java,/usr/share/confluent-hub-components,/data/connect-jars
+        - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+          value: "{{ .Values.broker.replicas }}"
+        - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+          value: "{{ .Values.broker.replicas }}"
+        - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+          value: "{{ .Values.broker.replicas }}"
 
