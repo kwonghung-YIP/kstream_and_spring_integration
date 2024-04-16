@@ -9,4 +9,11 @@ spring:
         default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         default.value.serde: io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
         schema.registry.url: http://schema-reg.kafka.svc.cluster.local:8081
+        num.partitions: 10
 
+logging:
+  level:
+    org.apache.kafka.streams.processor.internals.StreamThread: info
+    org.apache.kafka.streams.processor.internals.StoreChangelogReader: info
+    org.apache.kafka.streams.processor: debug
+    org.apache.kafka.streams.state: debug
