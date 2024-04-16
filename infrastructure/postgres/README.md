@@ -16,7 +16,7 @@ set price = random_normal(price,price*0.05),
 where ticker = 'AAPL';
 
 update stock.volume_feed
-set volume = volume + (1 + random()/10000),
+set volume = volume * (1 + random()/10000),
     ver = ver + 1,
     lastupd = current_timestamp
 where ticker = 'AAPL';
