@@ -26,12 +26,19 @@ kubectl exec --stdin --tty \
                 "topic.creation.postgres.replication.factor": "1",
                 "topic.creation.postgres.partitions": "10",
                 "topic.creation.postgres.include": "postgres.*",
-                "transforms":"extract",
-                "transforms.extract.type":"io.debezium.transforms.ExtractNewRecordState",
-                "transforms.extract.drop.tombstones":"false"
+                "transforms": "insertField,headerFrom,extractNewRecord",
+                "transforms.insertField.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+                "transforms.insertField.topic.field": "src_topic",
+                "transforms.headerFrom.type": "org.apache.kafka.connect.transforms.HeaderFrom$Value",
+                "transforms.headerFrom.fields": "src_topic",
+                "transforms.headerFrom.headers": "src_topic",
+                "transforms.headerFrom.operation": "move",
+                "transforms.extractNewRecord.type":"io.debezium.transforms.ExtractNewRecordState",
+                "transforms.extractNewRecord.drop.tombstones":"false"
             }
         }'
 ```
+
 
 ### Delete Debezium Postgres source connector 
 ```bash
@@ -151,3 +158,8 @@ kubectl run --stdin --tty \
 [Apache Kafka Stream Developer Guide - Stream DSL](https://kafka.apache.org/37/documentation/streams/developer-guide/dsl-api.html#aggregating)
 [avro-maven-plugin](https://avro.apache.org/docs/1.10.2/gettingstartedjava.html)
 [Schema Registry API Reference](https://docs.confluent.io/legacy/platform/4.1.3/schema-registry/docs/using.html)
+
+[Apache Kafka - Kafka Connect Transformations](https://kafka.apache.org/documentation/#connect_transforms)
+[Single Message Transforms (SMT) for Confluent Platform](https://docs.confluent.io/platform/current/connect/transforms/overview.html)
+[Debezium - Transformations](https://debezium.io/documentation/reference/stable/transformations/index.html)
+
