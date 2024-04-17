@@ -34,6 +34,40 @@ CREATE TABLE stock.volume_feed (
     unique(market,ticker,trade_date)
 );
 
+CREATE OR REPLACE PROCEDURE genRandomQuote(
+    p_ticker varchar,
+    p_cnt integer,
+    p_trade_date date default current_date,
+    p_market varchar default 'NASDAQ'
+) LANGUAGE plpgsql
+as $$
+declare
+begin
+    for cnt in 1..p_cnt
+    loop
+        if random() > 0.5 then
+            raise notice '%: update price for ticker %', cnt, p_ticker;
+            update stock.price_feed
+            set price = random_normal(price,price*0.05),
+                ver = ver + 1,
+                lastupd = current_timestamp
+            where ticker = p_ticker
+            and trade_date = p_trade_date;
+        else
+            raise notice '%: update volume for ticker %', cnt, p_ticker;
+            update stock.volume_feed
+            set volume = volume * (1 + random()/10000),
+                ver = ver + 1,
+                lastupd = current_timestamp
+            where ticker = p_ticker
+            and trade_date = p_trade_date;
+        end if;
+        commit;
+        -- sleep between 1-5 seconds
+        perform pg_sleep(round(random()*5));
+    end loop;
+end $$;
+
 do $$
 begin
     INSERT INTO stock.company_profile (

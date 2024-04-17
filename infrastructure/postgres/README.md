@@ -20,4 +20,6 @@ set volume = volume * (1 + random()/10000),
     ver = ver + 1,
     lastupd = current_timestamp
 where ticker = 'AAPL';
+
+call genRandomQuote('AAPL',10);
 ```
