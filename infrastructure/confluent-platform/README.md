@@ -18,6 +18,7 @@ kubectl exec --stdin --tty \
                 "database.dbname" : "db1",
                 "topic.prefix": "postgres",
                 "schema.include.list": "stock",
+                "message.key.columns": "stock.price_feed:market,ticker,trade_date;stock.volume_feed:market,ticker,trade_date",
                 "topic.delimiter": "_",
                 "topic.creation.enable": "true",
                 "topic.creation.groups": "postgres",
