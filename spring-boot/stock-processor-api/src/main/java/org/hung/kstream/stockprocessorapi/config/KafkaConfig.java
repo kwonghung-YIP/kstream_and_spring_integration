@@ -2,11 +2,9 @@ package org.hung.kstream.stockprocessorapi.config;
 
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.streams.Topology;
-import org.apache.kafka.streams.state.Stores;
 import org.hung.kstream.stockprocessorapi.domain.Quote;
 import org.hung.kstream.stockprocessorapi.domain.QuoteKey;
-import org.hung.kstream.stockprocessorapi.kstream.PriceFeedsConsolidateProcessor;
-import org.hung.kstream.stockprocessorapi.kstream.VolumeFeedsConsolidateProcessor;
+import org.hung.kstream.stockprocessorapi.kstream.QuoteFeedsConsolidateProcessorSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -43,18 +41,23 @@ public class KafkaConfig {
             Serde<QuoteKey> quoteKeySerde = new JsonSerde<>(QuoteKey.class);
             Serde<Quote> quoteSerde = new JsonSerde<>(Quote.class);
 
+            topology.addSource("quote-feeds", "postgres_stock_price_feed","postgres_stock_volume_feed")
+                .addProcessor("quote-consolidate", new QuoteFeedsConsolidateProcessorSupplier(), "quote-feeds")
+                .addSink("quote-update", "quote", quoteKeySerde.serializer(), quoteSerde.serializer(), "quote-consolidate");
+            /*
             topology.addSource("stock-price-feed", "postgres_stock_price_feed")
                 .addProcessor("consolidate-price-feed", () -> new PriceFeedsConsolidateProcessor(), "stock-price-feed")
                 .addSource("stock-volume-feed", "postgres_stock_volume_feed")
                 .addProcessor("consolidate-volume-feed", () -> new VolumeFeedsConsolidateProcessor(), "stock-volume-feed")
                 .addSink("quote-update", "quote",
-                    quoteKeySerde.serializer(), quoteSerde.serializer(), 
+                    Serdes.String().serializer(), quoteSerde.serializer(), 
                     "consolidate-price-feed","consolidate-volume-feed")
                 .addStateStore(
                     Stores.keyValueStoreBuilder(
                         Stores.persistentKeyValueStore("quote"), 
-                        quoteKeySerde, quoteSerde),
+                        Serdes.String(), quoteSerde),
                     "consolidate-price-feed","consolidate-volume-feed");
+            */
         }        
     }
 
