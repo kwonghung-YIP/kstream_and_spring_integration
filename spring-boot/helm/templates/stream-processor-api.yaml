@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: stock-processor-api
-  replicas: 1
+  replicas: {{ .Values.stock_processor_api.replicas }}
   template:
     metadata:
       labels:
