@@ -55,7 +55,6 @@ public class PriceFeedsConsolidateProcessor implements Processor<String,GenericR
             quote.setMarket(market);
             quote.setTicker(ticker);
             quote.setTradeDate(tradeDate);
-            store.put(key, quote);
         }
 
         if (Objects.isNull(quote.getOpen())) {
@@ -72,6 +71,7 @@ public class PriceFeedsConsolidateProcessor implements Processor<String,GenericR
         }
         quote.setVer(quote.getVer()+1);
         quote.setLastUpdDate(Instant.now());
+        store.put(key, quote);
 
         context.forward(new Record<>(key,quote,Instant.now().toEpochMilli()));
     }

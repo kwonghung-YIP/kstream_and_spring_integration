@@ -51,12 +51,12 @@ public class VolumeFeedsConsolidateProcessor implements Processor<String,Generic
             quote.setMarket(market);
             quote.setTicker(ticker);
             quote.setTradeDate(tradeDate);
-            store.put(key, quote);
         }
 
         quote.setVolume(volume);
         quote.setVer(quote.getVer()+1);
         quote.setLastUpdDate(Instant.now());
+        store.put(key, quote);
 
         context.forward(new Record<>(key,quote,Instant.now().toEpochMilli()));
     }
