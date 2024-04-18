@@ -5,7 +5,7 @@ kubectl get pods -lapp=postgres-db -n=postgres -o jsonpath='{.items[0].metadata.
 kubectl exec --stdin --tty \
     $(kubectl get pods -lapp=postgres-db -n=postgres -o jsonpath='{.items[0].metadata.name}') \
     --namespace=postgres -- \
-    psql --host=localhost --username=admin --dbname=db1
+    psql --host=localhost --username=admin --dbname=db1 -c "call genRandomQuote('TSLA',500);"
 ```
 
 ```sql
@@ -21,5 +21,5 @@ set volume = volume * (1 + random()/10000),
     lastupd = current_timestamp
 where ticker = 'AAPL';
 
-call genRandomQuote('AAPL',10);
+call genRandomQuote('AAPL',5000);
 ```
